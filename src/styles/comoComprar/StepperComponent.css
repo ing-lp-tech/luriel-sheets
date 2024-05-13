@@ -1,0 +1,106 @@
+.stepper-container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.stepper-content {
+  margin-top: 20px;
+  text-align: center;
+}
+.stepper-content p {
+  color: black;
+}
+
+h2 {
+  color: black;
+}
+.stepper-button-container {
+  margin-top: 20px;
+}
+
+/* Estilos personalizados para el Stepper */
+.MuiStepIcon-root.MuiStepIcon-active {
+  color: #007bff;
+}
+
+.MuiStepIcon-root.MuiStepIcon-completed {
+  color: #28a745;
+}
+
+.MuiStepIcon-root.MuiStepIcon-text {
+  fill: #007bff;
+}
+
+.stepper {
+  color: white;
+  padding: 20px;
+}
+
+/* main {
+  display: flex;
+  justify-content: center;
+} */
+
+.ecommerce-segment {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 40px 10px;
+  background-color: #f7f7f7;
+}
+
+/* .compraCompleta {
+  margin: auto;
+  width: 40vw;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 40px 20px;
+  background-color: #15cf56;
+} */
+/* .compraCompleta {
+  animation: bounce 2s ease-in-out forwards;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+} */
+.compraCompleta {
+  margin: 20px auto 0;
+  width: 50%;
+  animation: flash 2s ease-in-out infinite alternate;
+  background-color: #fb0058;
+}
+
+.compraCompleta h2 {
+  color: white;
+}
+
+@keyframes flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+/* 
+.css-1hv8oq8-MuiStepLabel-label.MuiStepLabel-alternativeLabel {
+  display: none;
+} */
+.MuiStepLabel-label.MuiStepLabel-alternativeLabel {
+  display: none;
+}
+
+/* uiStepLabel-labelContainer MuiStepLabel-alternativeLabel css-1vyamtt-MuiStepLabel-labelContainer */

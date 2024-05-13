@@ -1,0 +1,177 @@
+.cart {
+  background: #cdcbcb;
+  display: none;
+  padding: 22px;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  width: 200px;
+  z-index: 3;
+  color: white;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.cart::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.cart::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cart img {
+  /* aspect-ratio: 16/9; */
+  width: 60%;
+}
+
+.cart li {
+  border-bottom: 1px solid #444;
+  padding-bottom: 16px;
+}
+
+.cart footer {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart footer button {
+  padding: 8px;
+}
+
+.inputCar {
+  display: none;
+}
+
+.cart-button {
+  align-items: center;
+  background: #09f;
+  border-radius: 9999px;
+  cursor: pointer;
+  display: flex;
+  height: 32px;
+  justify-content: center;
+  padding: 4px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  transition: all 0.3s ease;
+  width: 32px;
+  z-index: 9999;
+}
+
+.cart-button:hover {
+  scale: 1.1;
+}
+
+.cart-button ~ input:checked ~ .cart {
+  height: 100%;
+  display: block;
+}
+.cartItem {
+  font-size: 12px;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.cart h4 {
+  color: black;
+}
+
+/* .cartItem img {
+  height: 50%;
+} */
+
+/* Móviles pequeños (portrait) */
+@media screen and (max-width: 480px) {
+  /* Estilos para pantallas de hasta 480px de ancho */
+}
+
+/* Móviles pequeños (landscape) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  /* Estilos para pantallas entre 481px y 767px de ancho */
+  .cart-button {
+    top: 78px;
+  }
+}
+
+/* Tabletas pequeñas (portrait) */
+@media screen and (min-width: 769px) and (max-width: 1023px) {
+  /* Estilos para pantallas entre 992px y 1023px de ancho */
+}
+
+/* Tabletas grandes */
+@media screen and (min-width: 1024px) and (max-width: 1199px) {
+  /* Estilos para pantallas entre 1024px y 1199px de ancho */
+  .cart-button {
+    align-items: center;
+    background: #09f;
+    border-radius: 9999px;
+    cursor: pointer;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    padding: 4px;
+    position: absolute;
+    right: 15px;
+    top: 13px;
+    transition: all 0.3s ease;
+    width: 32px;
+    z-index: 9999;
+  }
+}
+
+/* Notebooks pequeños */
+@media screen and (min-width: 1200px) and (max-width: 1439px) {
+  /* Estilos para pantallas entre 1200px y 1439px de ancho */
+
+  .cart-button {
+    align-items: center;
+    background: #09f;
+    border-radius: 9999px;
+    cursor: pointer;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    padding: 4px;
+    position: absolute;
+    right: 8px;
+    top: 28px;
+    transition: all 0.3s ease;
+    width: 32px;
+    z-index: 9999;
+  }
+}
+
+/* Notebooks medianos */
+@media screen and (min-width: 1440px) {
+  /* Estilos para pantallas de 1680px en adelante */
+  .cart-button {
+    align-items: center;
+    background: #09f;
+    border-radius: 9999px;
+    cursor: pointer;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    padding: 4px;
+    position: absolute;
+    right: 8px;
+    top: 28px;
+    transition: all 0.3s ease;
+    width: 32px;
+    z-index: 9999;
+  }
+}
+
+/* 
+Puedes ajustar estos valores en las media queries para adaptarlos a tus necesidades específicas. Estos son solo ejemplos, y los breakpoints deben coincidir con el diseño y la estructura de tu sitio web. Las media queries te permiten aplicar estilos diferentes según el ancho de la pantalla, lo que es fundamental para la creación de diseños receptivos.
+ */

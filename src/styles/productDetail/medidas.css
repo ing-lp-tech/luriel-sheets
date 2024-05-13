@@ -1,0 +1,47 @@
+.talles {
+  text-align: center;
+}
+
+.talles h3 {
+  margin-bottom: 20px;
+}
+
+.talles div {
+  margin-bottom: 20px;
+}
+.talleIndividual {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.buttonGroup :first-child {
+}
+
+.MuiButtonGroup-root {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  /* Dos columnas en versión de escritorio */
+  .talles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .talles div {
+    width: 45%; /* Ancho del contenedor */
+  }
+  .MuiButtonGroup-root {
+    width: 100%;
+  }
+}
+
+/* Estilos específicos para móviles */
+@media (max-width: 767px) {
+  .talles div {
+    width: 90%; /* Ancho del contenedor en versión móvil */
+  }
+}

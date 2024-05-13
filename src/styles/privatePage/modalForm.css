@@ -1,0 +1,14 @@
+.modal-container {
+  max-width: 600px; /* Ajusta el ancho máximo según tus preferencias */
+  margin: 0 auto;
+  padding: 20px;
+  border: 2px solid #ccc; /* Añade un borde al formulario */
+  border-radius: 8px; /* Añade bordes redondeados al formulario */
+  box-sizing: border-box;
+}
+
+@media only screen and (max-width: 768px) {
+  .modal-container {
+    max-width: 100%; /* Haz que el formulario ocupe el ancho completo en dispositivos más pequeños */
+  }
+}

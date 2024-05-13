@@ -1,0 +1,35 @@
+/* En SeleccionStock.css */
+
+/*div {
+  margin-top: 20px;
+  text-align: center;
+} */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #4caf50;
+  color: white;
+}
+
+input {
+  width: 80px; /* Ajusta el ancho según tus necesidades */
+  padding: 8px;
+}
+
+@media (max-width: 600px) {
+  input {
+    width: 100%;
+  }
+}

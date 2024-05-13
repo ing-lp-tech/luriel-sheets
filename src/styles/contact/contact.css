@@ -1,0 +1,28 @@
+.titleContac {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 14px;
+}
+.datos {
+  display: flex;
+  gap: 10px;
+}
+/* .datos :first-child {
+  width: 30%;
+}
+
+.datos :nth-child(2) {
+  width: 70%;
+} */
+
+.MuiGrid-root > .MuiGrid-item {
+  padding-left: 24px;
+  margin: auto;
+}

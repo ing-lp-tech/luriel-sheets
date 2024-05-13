@@ -1,0 +1,238 @@
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2; /* Asegura que el encabezado esté en la parte superior de todo */
+}
+
+.containerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  width: 95%;
+  justify-content: space-around;
+  height: 35px;
+}
+
+.logo {
+  /* font-size: 20px; */
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+
+  /* width: 20vw;
+  gap: 20px; */
+}
+.logo :first-child {
+  text-decoration: none;
+  font-size: 30px;
+}
+
+.logo h1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  color: #09f;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin: 0 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.nav {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.nav ul {
+  display: flex;
+  align-items: center;
+}
+
+.nav li {
+  margin-right: 20px;
+  /* linea agregada */
+  margin-bottom: 0;
+}
+
+.nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 11px;
+}
+
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+}
+
+.menu-toggle svg {
+  font-size: 24px;
+  color: #fff;
+}
+
+.open {
+  display: block;
+}
+
+.nav.open {
+  display: block;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: #333;
+}
+
+.nav.open ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-direction: column;
+  width: 100vw;
+}
+
+.nav.open li {
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid #555;
+}
+
+.nav.open a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos para el botón de "Iniciar sesión" en el modal */
+.modal button {
+  margin-top: 10px;
+}
+
+/* Estilos opcionales para personalizar la apariencia de los campos de entrada (TextField) */
+.modal input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Estilos para la barra de navegación */
+.App-bar {
+  background-color: #1976d2; /* Cambia esto al color de fondo deseado */
+}
+
+.css-ai7n3w-MuiInputBase-root {
+  height: 100%;
+}
+
+/* Media queries para dispositivos móviles y tabletas */
+@media all and (min-width: 480px) and (max-width: 768px) {
+  header {
+    max-height: 76;
+  }
+  .header-content {
+    display: flex;
+    align-items: center;
+    width: 95%;
+    justify-content: space-around;
+  }
+
+  .containerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+  }
+
+  .search-input {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+  .nav {
+    display: none;
+  }
+
+  .logo :first-child {
+    text-decoration: none;
+    font-size: 20px;
+  }
+  .nav.open {
+    display: block;
+    position: absolute;
+    top: 76px;
+    right: 0;
+    background-color: #333;
+  }
+}
+
+@media all and (max-width: 479px) {
+  header {
+    max-height: 76;
+  }
+
+  .containerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+  }
+
+  .search-input {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+  .nav {
+    display: none;
+  }
+
+  .logo :first-child {
+    text-decoration: none;
+    font-size: 20px;
+  }
+  .nav.open {
+    display: block;
+    position: absolute;
+    top: 76px;
+    right: 0;
+    background-color: #333;
+  }
+}
