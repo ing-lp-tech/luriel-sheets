@@ -96,6 +96,7 @@ const Header = () => {
             <div className="menu-toggle" onClick={toggleMobileMenu}>
               <MenuIcon fontSize="large" />
             </div>
+
             <div>
               <nav className={`nav ${isMobileMenuOpen ? "open" : ""}`}>
                 <ul>
@@ -249,7 +250,7 @@ const Header = () => {
                 </ul>
               </nav>
             </div>
-            <CartBuy />
+            {isLoggedIn ? "" : <CartBuy />}
           </div>
         </div>
       </header>
@@ -278,7 +279,7 @@ const Search = styled("div")(({ theme }) => ({
     width: "35vw",
   },
   [theme.breakpoints.up("md")]: {
-    width: "auto",
+    width: "30vw",
     height: "20px",
   },
 }));

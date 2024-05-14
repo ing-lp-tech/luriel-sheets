@@ -3,7 +3,7 @@ import "../../styles/wssp/wssp.css";
 import { useGlobalContext } from "../../context/GlobalContextProvider";
 
 const WhatsAppIcon = () => {
-  const { cart } = useGlobalContext();
+  const { cart, isLoggedIn } = useGlobalContext();
   const handleChatOpen = () => {
     // Lógica para abrir el chat de WhatsApp al hacer clic
     /* window.open("https://api.whatsapp.com/send?phone=123456789", "_blank"); */
@@ -74,7 +74,7 @@ const WhatsAppIcon = () => {
 
   console.log("newCart:", newCart);
 
-  return (
+  return isLoggedIn ? null : (
     <div className="whatsapp-icon" onClick={handleChatOpen}>
       <img
         src="/imagenes/WhatsApp.svg" // Añade tu propia imagen de ícono de WhatsApp

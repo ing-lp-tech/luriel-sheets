@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import { Container } from "@mui/material";
+import {
+  Container,
+  ToggleButton,
+  ToggleButtonGroup,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  TextField,
+} from "@mui/material";
+import { styled } from "@mui/system";
 import {
   getProducts,
   getEntradas,
@@ -16,7 +19,33 @@ import {
   getInventario,
   writeDataToSheet,
 } from "../auth";
-import ExcelTable from "../components/Products/ExcelTable"; // Importa tu componente ExcelTable
+import ExcelTable from "../components/Products/ExcelTable";
+
+const ResponsiveContainer = styled(Container)({
+  width: "100%",
+  padding: "20px",
+  height: "82vh",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+
+  "@media (min-width: 768px)": {
+    maxWidth: "960px",
+    margin: "0 auto",
+    height: "82vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  "@media (min-width: 992px)": {
+    maxWidth: "1170px",
+    margin: "0 auto",
+  },
+  "@media (min-width: 1200px)": {
+    maxWidth: "1400px",
+    margin: "0 auto",
+  },
+});
 
 const Products = () => {
   const [alignment, setAlignment] = useState(null);
@@ -91,30 +120,13 @@ const Products = () => {
     }));
   };
 
-  /* const handleSubmit = async () => {
-    // Aquí puedes manejar la lógica para enviar los datos a tu backend o hacer lo que necesites con formData
-    console.log(formData);
-
-    // Llama a la función para escribir datos en Google Sheets
-    try {
-      await writeDataToSheet(alignment, formData);
-      console.log("Datos enviados correctamente a Google Sheets");
-    } catch (error) {
-      console.error("Error al enviar datos a Google Sheets:", error);
-    }
-
-    handleClose();
-  }; */
   const handleSubmit = async () => {
-    // Aquí puedes manejar la lógica para enviar los datos a tu backend o hacer lo que necesites con formData
     console.log(formData);
 
-    // Llama a la función para escribir datos en Google Sheets
     try {
       await writeDataToSheet(alignment, formData);
       console.log("Datos enviados correctamente a Google Sheets");
 
-      // Actualiza los productos después de enviar los datos
       if (alignment === "productos") {
         const updatedProducts = await getProducts();
         setProducts(updatedProducts);
@@ -122,7 +134,6 @@ const Products = () => {
         const updatedProducts = await getEntradas();
         setProducts(updatedProducts);
       }
-      // Agrega condiciones para otros tipos de alineación si es necesario
 
       handleClose();
     } catch (error) {
@@ -131,36 +142,37 @@ const Products = () => {
   };
 
   useEffect(() => {
-    // Puedes realizar alguna acción cuando el componente se monte o actualice
     console.log("Alignment changed:", alignment);
   }, [alignment]);
 
   return (
-    <Container style={{ textAlign: "center" }}>
-      <Container>
-        <ToggleButtonGroup
-          color="primary"
-          value={alignment}
-          exclusive
-          onChange={handleChange}
-          aria-label="Platform"
-        >
-          <ToggleButton value="productos">Productos</ToggleButton>
-          <ToggleButton value="entradas">Entradas</ToggleButton>
-          <ToggleButton value="salidas">Salidas</ToggleButton>
-          <ToggleButton value="inventario">Inventario</ToggleButton>
-        </ToggleButtonGroup>
-      </Container>
-      {alignment !== null && (
-        <Container className="tabla">
+    <ResponsiveContainer>
+      <ToggleButtonGroup
+        color="primary"
+        value={alignment}
+        exclusive
+        onChange={handleChange}
+        aria-label="Platform"
+        mb={4}
+      >
+        <ToggleButton value="productos">Productos</ToggleButton>
+        <ToggleButton value="entradas">Entradas</ToggleButton>
+        <ToggleButton value="salidas">Salidas</ToggleButton>
+        <ToggleButton value="inventario">Inventario</ToggleButton>
+      </ToggleButtonGroup>
+
+      {alignment && (
+        <Container className="tabla" mb={4}>
           {products.length > 0 && <ExcelTable data={products} />}
         </Container>
       )}
+
       {showAddButton && (
-        <Button onClick={handleAddClick} variant="contained" color="primary">
+        <Button onClick={handleAddClick} color="primary" mb={4}>
           Agregar {alignment}
         </Button>
       )}
+
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Agregar Entrada</DialogTitle>
         <DialogContent>
@@ -176,6 +188,7 @@ const Products = () => {
             name="nombre"
             value={formData.nombre}
             onChange={handleInputChange}
+            mb={2}
           />
           <TextField
             margin="dense"
@@ -185,6 +198,7 @@ const Products = () => {
             name="nroRef"
             value={formData.nroRef}
             onChange={handleInputChange}
+            mb={2}
           />
           <TextField
             margin="dense"
@@ -194,16 +208,19 @@ const Products = () => {
             name="nroRef2"
             value={formData.nroRef2}
             onChange={handleInputChange}
+            mb={2}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary">
+          <Button onClick={handleClose} mr={2}>
+            Cancelar
+          </Button>
+          <Button onClick={handleSubmit} color="primary" variant="contained">
             Agregar
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </ResponsiveContainer>
   );
 };
 

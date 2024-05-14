@@ -94,7 +94,7 @@ const AppPrivate = () => {
 
   return (
     <div className="app-container">
-      <button id="authorize_button" onClick={handleAuthClick}>
+      {/* <button id="authorize_button" onClick={handleAuthClick}>
         Authorize
       </button>
       <h1>Inventario App</h1>
@@ -115,7 +115,7 @@ const AppPrivate = () => {
         onEliminar={handleEliminar}
         onModificar={handleModificar}
         selectedRow={selectedRow}
-      />
+      /> */}
     </div>
   );
 };

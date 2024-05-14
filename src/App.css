@@ -13,9 +13,29 @@ body {
   margin-top: 11vh;
 }
 
-@media (max-width: 768px) {
-  /* Estilos para pantallas grandes */
+/* Media query para pantallas de dispositivos móviles */
+@media (max-width: 479px) {
   .pages {
-    margin-top: 8vh;
+    margin-top: 10vh; /* Ejemplo de ajuste en dispositivos móviles */
   }
+
+  /* Otros estilos específicos para dispositivos móviles */
+}
+
+/* Media query para tablets y dispositivos similares */
+@media (min-width: 480px) and (max-width: 768px) {
+  .pages {
+    margin-top: 8vh; /* Ajuste para tablets */
+  }
+
+  /* Otros estilos específicos para tablets */
+}
+
+/* Media query para pantallas de escritorio */
+@media (min-width: 769px) {
+  .pages {
+    margin-top: 7vh; /* Estilos originales para pantallas de escritorio */
+  }
+
+  /* Otros estilos específicos para pantallas de escritorio */
 }

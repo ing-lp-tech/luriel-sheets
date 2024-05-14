@@ -1,3 +1,4 @@
+/* Estilos generales */
 header {
   background-color: #333;
   color: #fff;
@@ -11,27 +12,27 @@ header {
 
 .containerHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  width: auto; /* Ajuste para ocupar todo el ancho */
+  padding: 0 20px; /* Añadido para espacio alrededor */
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  width: 95%;
+  width: 100%;
   justify-content: space-around;
   height: 35px;
+  gap: 10px;
 }
 
 .logo {
-  /* font-size: 20px; */
   font-weight: bold;
   display: flex;
   align-items: center;
-
-  /* width: 20vw;
-  gap: 20px; */
 }
+
 .logo :first-child {
   text-decoration: none;
   font-size: 30px;
@@ -74,12 +75,16 @@ header {
 .nav a {
   color: #fff;
   text-decoration: none;
-  font-size: 11px;
+  font-size: 1rem;
 }
 
 .menu-toggle {
   display: none;
   cursor: pointer;
+  position: absolute;
+  right: 20px; /* Ajuste a la derecha */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .menu-toggle svg {
@@ -213,13 +218,23 @@ header {
     width: 100vw;
   }
 
+  .header-content {
+    width: 100vw;
+  }
   .search-input {
     display: none;
   }
 
   .menu-toggle {
     display: block;
+    /* display: none; */
+    cursor: pointer;
+    position: absolute;
+    right: 60px; /* Ajuste a la derecha */
+    top: 50%;
+    transform: translateY(-50%);
   }
+
   .nav {
     display: none;
   }
