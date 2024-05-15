@@ -4,7 +4,6 @@ import { useGlobalContext } from "../context/GlobalContextProvider";
 import { useNavigate } from "react-router-dom";
 import "../styles/login/login.css";
 
-
 import IconButton from "@mui/material/IconButton";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -26,7 +25,7 @@ const Login = () => {
 
   const handleLogin = () => {
     login(credentials);
-    navigate("/usuarios_registrados");
+    navigate("/products");
   };
 
   const [showPassword, setShowPassword] = useState(false);

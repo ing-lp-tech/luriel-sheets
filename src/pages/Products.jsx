@@ -51,61 +51,42 @@ const Products = () => {
   const [alignment, setAlignment] = useState(null);
   const [open, setOpen] = useState(false);
   const [showAddButton, setShowAddButton] = useState(false);
-  const [formData, setFormData] = useState({
-    nombre: "",
-    nroRef: "",
-    nroRef2: "",
-  });
+  const [formData, setFormData] = useState({});
   const [products, setProducts] = useState([]);
 
-  const handleChange = async (event, newAlignment) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let data;
+        if (alignment === "productos") {
+          data = await getProducts();
+        } else if (alignment === "entradas") {
+          data = await getEntradas();
+        } else if (alignment === "salidas") {
+          data = await getSalidas();
+        } else if (alignment === "inventario") {
+          data = await getInventario();
+        }
+        setProducts(data || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [alignment]);
+
+  const handleAlignmentChange = async (event, newAlignment) => {
     setAlignment(newAlignment);
-    setShowAddButton(false);
+    setShowAddButton(true);
     setOpen(false);
-    if (newAlignment === "productos") {
-      setShowAddButton(true);
-      try {
-        const productsData = await getProducts();
-        setProducts(productsData);
-        console.log("products:", productsData);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    }
-    if (newAlignment === "entradas") {
-      setShowAddButton(true);
-      try {
-        const productsData = await getEntradas();
-        setProducts(productsData);
-        console.log("entradas:", productsData);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    }
-    if (newAlignment === "salidas") {
-      setShowAddButton(true);
-      try {
-        const productsData = await getSalidas();
-        setProducts(productsData);
-        console.log("salidas:", productsData);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    }
-    if (newAlignment === "inventario") {
-      setShowAddButton(true);
-      try {
-        const productsData = await getInventario();
-        setProducts(productsData);
-        console.log("inventario:", productsData);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    }
   };
 
   const handleAddClick = () => {
     setOpen(true);
+    if (products.length > 0) {
+      setFormData(products[0]);
+    }
   };
 
   const handleClose = () => {
@@ -121,18 +102,12 @@ const Products = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(formData);
-
     try {
       await writeDataToSheet(alignment, formData);
       console.log("Datos enviados correctamente a Google Sheets");
 
       if (alignment === "productos") {
-        const updatedProducts = await getProducts();
-        setProducts(updatedProducts);
-      } else if (alignment === "entradas") {
-        const updatedProducts = await getEntradas();
-        setProducts(updatedProducts);
+        setProducts(await getProducts());
       }
 
       handleClose();
@@ -141,17 +116,13 @@ const Products = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("Alignment changed:", alignment);
-  }, [alignment]);
-
   return (
     <ResponsiveContainer>
       <ToggleButtonGroup
         color="primary"
         value={alignment}
         exclusive
-        onChange={handleChange}
+        onChange={handleAlignmentChange}
         aria-label="Platform"
         mb={4}
       >
@@ -179,37 +150,21 @@ const Products = () => {
           <DialogContentText>
             Por favor, complete los siguientes campos:
           </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Nombre"
-            type="text"
-            fullWidth
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleInputChange}
-            mb={2}
-          />
-          <TextField
-            margin="dense"
-            label="Número de Referencia"
-            type="text"
-            fullWidth
-            name="nroRef"
-            value={formData.nroRef}
-            onChange={handleInputChange}
-            mb={2}
-          />
-          <TextField
-            margin="dense"
-            label="Número de Referencia 2"
-            type="text"
-            fullWidth
-            name="nroRef2"
-            value={formData.nroRef2}
-            onChange={handleInputChange}
-            mb={2}
-          />
+          {products.length > 0 &&
+            Object.entries(products[0]).map(([key, label]) => (
+              <TextField
+                key={key}
+                autoFocus
+                margin="dense"
+                label={label}
+                type="text"
+                fullWidth
+                name={key}
+                value={formData[key] || ""}
+                onChange={handleInputChange}
+                mb={2}
+              />
+            ))}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} mr={2}>
