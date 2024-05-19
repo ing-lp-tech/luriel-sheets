@@ -108,7 +108,8 @@ async function getDataFromSheet(hoja) {
   /* return range.values; */
 }
 
-async function writeDataToSheet(sheetName, formData) {
+/* async function writeDataToSheet(sheetName, formData) {
+  console.log("sheetName, formData:", sheetName, formData);
   // Obtener el rango de celdas donde se escribirán los datos
   const range = `${sheetName}!A:G`; // Rango de las tres primeras columnas, ajusta según tu hoja
 
@@ -134,6 +135,47 @@ async function writeDataToSheet(sheetName, formData) {
     formData.nombre,
     formData.nroRef2,
   ];
+  console.log("newRow", newRow);
+  const newRange = `${sheetName}!A${values.length + 1}:D${values.length + 1}`;
+
+  try {
+    const appendResponse = await gapi.client.sheets.spreadsheets.values.append({
+      spreadsheetId: "1ZCUQWYMLJ_Yad620mI_zUCXSHbT-1naBDFPp1WMwP9Q", // Reemplaza con el ID de tu hoja
+      range: newRange,
+      valueInputOption: "RAW",
+      resource: { values: [newRow] },
+    });
+
+    console.log("Datos escritos en la hoja:", appendResponse);
+  } catch (error) {
+    console.error("Error al escribir datos en la hoja:", error);
+    throw error;
+  }
+}
+
+export { writeDataToSheet }; */
+async function writeDataToSheet(sheetName, formData) {
+  console.log("sheetName, formData:", sheetName, formData);
+  // Obtener el rango de celdas donde se escribirán los datos
+  const range = `${sheetName}!A:G`; // Rango de las tres primeras columnas, ajusta según tu hoja
+
+  // Obtener los valores actuales en la hoja
+  const response = await gapi.client.sheets.spreadsheets.values.get({
+    spreadsheetId: "1ZCUQWYMLJ_Yad620mI_zUCXSHbT-1naBDFPp1WMwP9Q", // Reemplaza con el ID de tu hoja
+    range: range,
+  });
+
+  const values = response.result.values || [];
+  let nextId = 1; // Valor predeterminado si no hay datos aún
+
+  if (values.length > 0) {
+    // Obtener el máximo ID actual
+    const maxId = Math.max(...values.map((row) => Number(row[0])));
+    nextId = maxId + 1;
+  }
+
+  // Crear la nueva fila con el ID incrementado
+  const newRow = [values.length, ...Object.values(formData)];
   console.log("newRow", newRow);
   const newRange = `${sheetName}!A${values.length + 1}:D${values.length + 1}`;
 

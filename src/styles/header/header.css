@@ -22,7 +22,7 @@ header {
   display: flex;
   align-items: center;
   width: 100%;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   height: 35px;
   gap: 10px;
 }
@@ -163,6 +163,17 @@ header {
   height: 100%;
 }
 
+@media all and (min-width: 768px) {
+  .header-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-around;
+    height: 50px;
+    gap: 10px;
+  }
+}
+
 /* Media queries para dispositivos móviles y tabletas */
 @media all and (min-width: 480px) and (max-width: 768px) {
   header {
@@ -218,9 +229,18 @@ header {
     width: 100vw;
   }
 
-  .header-content {
+  /* .header-content {
     width: 100vw;
+  } */
+  .header-content {
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    /* justify-content: space-around; */
+    height: 35px;
+    gap: 35px;
   }
+
   .search-input {
     display: none;
   }
@@ -246,7 +266,7 @@ header {
   .nav.open {
     display: block;
     position: absolute;
-    top: 76px;
+    top: 3rem;
     right: 0;
     background-color: #333;
   }

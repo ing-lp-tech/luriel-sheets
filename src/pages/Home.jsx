@@ -174,9 +174,9 @@ const Home = () => {
       </div>
 
       <Carousel />
-      <button id="authorize_button" onClick={handleAuthClick}>
+      {/* <button id="authorize_button" onClick={handleAuthClick}>
         Authorize
-      </button>
+      </button> */}
       <div className="products">
         {prodSearch.map(
           ({ category, title, id, price, description, images }) => (

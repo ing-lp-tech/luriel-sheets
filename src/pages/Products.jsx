@@ -21,32 +21,6 @@ import {
 } from "../auth";
 import ExcelTable from "../components/Products/ExcelTable";
 
-const ResponsiveContainer = styled(Container)({
-  width: "100%",
-  padding: "20px",
-  height: "82vh",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-
-  "@media (min-width: 768px)": {
-    maxWidth: "960px",
-    margin: "0 auto",
-    height: "82vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  "@media (min-width: 992px)": {
-    maxWidth: "1170px",
-    margin: "0 auto",
-  },
-  "@media (min-width: 1200px)": {
-    maxWidth: "1400px",
-    margin: "0 auto",
-  },
-});
-
 const Products = () => {
   const [alignment, setAlignment] = useState(null);
   const [open, setOpen] = useState(false);
@@ -101,7 +75,7 @@ const Products = () => {
     }));
   };
 
-  const handleSubmit = async () => {
+  /* const handleSubmit = async () => {
     try {
       await writeDataToSheet(alignment, formData);
       console.log("Datos enviados correctamente a Google Sheets");
@@ -114,10 +88,31 @@ const Products = () => {
     } catch (error) {
       console.error("Error al enviar datos a Google Sheets:", error);
     }
+  }; */
+  const handleSubmit = async () => {
+    try {
+      // Filtrar las propiedades de formData para excluir la primera
+      const filteredData = Object.fromEntries(
+        Object.entries(formData).filter(([key, value], index) => index !== 0)
+      );
+
+      await writeDataToSheet(alignment, filteredData);
+      console.log("Datos enviados correctamente a Google Sheets");
+
+      if (alignment === "productos") {
+        setProducts(await getProducts());
+      }
+
+      handleClose();
+    } catch (error) {
+      console.error("Error al enviar datos a Google Sheets:", error);
+    }
   };
 
+  console.log("alignment", alignment);
+
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer alignment={alignment}>
       <ToggleButtonGroup
         color="primary"
         value={alignment}
@@ -151,20 +146,23 @@ const Products = () => {
             Por favor, complete los siguientes campos:
           </DialogContentText>
           {products.length > 0 &&
-            Object.entries(products[0]).map(([key, label]) => (
-              <TextField
-                key={key}
-                autoFocus
-                margin="dense"
-                label={label}
-                type="text"
-                fullWidth
-                name={key}
-                value={formData[key] || ""}
-                onChange={handleInputChange}
-                mb={2}
-              />
-            ))}
+            Object.entries(products[0]).map(([key, label]) =>
+              key === "id" ? null : ( // Ignora el primer valor del objeto
+                <TextField
+                  key={key}
+                  autoFocus
+                  margin="dense"
+                  label={label}
+                  type="text"
+                  fullWidth
+                  name={key}
+                  /* value={formData[key] || ""} */
+                  /* value={""} */
+                  onChange={handleInputChange}
+                  mb={2}
+                />
+              )
+            )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} mr={2}>
@@ -180,3 +178,30 @@ const Products = () => {
 };
 
 export default Products;
+
+const ResponsiveContainer = styled(Container)(({ alignment }) => ({
+  width: "100%",
+  padding: "20px",
+  // Nuevo código: altura dinámica basada en la alineación
+  height: alignment === null ? "16rem" : "auto",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+
+  "@media (min-width: 768px)": {
+    maxWidth: "960px",
+    margin: "0 auto",
+    height: alignment === null ? "100px" : "auto", // Nuevo código
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  "@media (min-width: 992px)": {
+    maxWidth: "1170px",
+    margin: "0 auto",
+  },
+  "@media (min-width: 1200px)": {
+    maxWidth: "1400px",
+    margin: "0 auto",
+  },
+}));
