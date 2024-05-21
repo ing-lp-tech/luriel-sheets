@@ -28,7 +28,7 @@ const Products = () => {
   const [formData, setFormData] = useState({});
   const [products, setProducts] = useState([]);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     const fetchData = async () => {
       try {
         let data;
@@ -48,7 +48,7 @@ const Products = () => {
     };
 
     fetchData();
-  }, [alignment]);
+  }, [alignment]); */
 
   const handleAlignmentChange = async (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -111,6 +111,45 @@ const Products = () => {
 
   console.log("alignment", alignment);
 
+  const fetchData = async () => {
+    try {
+      let data;
+      if (alignment === "productos") {
+        data = await getProducts();
+      } else if (alignment === "entradas") {
+        data = await getEntradas();
+      } else if (alignment === "salidas") {
+        data = await getSalidas();
+      } else if (alignment === "inventario") {
+        data = await getInventario();
+      }
+      setProducts(data || []);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    /* const fetchData = async () => {
+      try {
+        let data;
+        if (alignment === "productos") {
+          data = await getProducts();
+        } else if (alignment === "entradas") {
+          data = await getEntradas();
+        } else if (alignment === "salidas") {
+          data = await getSalidas();
+        } else if (alignment === "inventario") {
+          data = await getInventario();
+        }
+        setProducts(data || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+ */
+    fetchData();
+  }, [alignment]);
+
   return (
     <ResponsiveContainer alignment={alignment}>
       <ToggleButtonGroup
@@ -129,7 +168,13 @@ const Products = () => {
 
       {alignment && (
         <Container className="tabla" mb={4}>
-          {products.length > 0 && <ExcelTable data={products} />}
+          {products.length > 0 && (
+            <ExcelTable
+              data={products}
+              hoja={alignment}
+              fetchData={fetchData}
+            />
+          )}
         </Container>
       )}
 

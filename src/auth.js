@@ -78,7 +78,7 @@ async function getDataFromSheet(hoja) {
     // eslint-disable-next-line no-undef
     response = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: "1ZCUQWYMLJ_Yad620mI_zUCXSHbT-1naBDFPp1WMwP9Q",
-      range: `${hoja}!A:K`,
+      range: `${hoja}!A:L`,
     });
   } catch (err) {
     console.error(err);
@@ -195,6 +195,28 @@ async function writeDataToSheet(sheetName, formData) {
 }
 
 export { writeDataToSheet };
+
+async function updateRowInSheet(sheetName, rowIndex, formData) {
+  console.log("sheetName, rowIndex, formData:", sheetName, rowIndex, formData);
+  const range = `${sheetName}!A${rowIndex + 2}:Z${rowIndex + 2}`;
+  const values = [Object.values(formData)];
+
+  try {
+    const response = await gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: "1ZCUQWYMLJ_Yad620mI_zUCXSHbT-1naBDFPp1WMwP9Q",
+      range: range,
+      valueInputOption: "RAW",
+      resource: { values },
+    });
+
+    console.log("Fila actualizada en la hoja:", response);
+  } catch (error) {
+    console.error("Error al actualizar la fila en la hoja:", error);
+    throw error;
+  }
+}
+
+export { updateRowInSheet };
 
 async function getTurnos() {
   turnos = await getDataFromSheet(hojaTurnos);

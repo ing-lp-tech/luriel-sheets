@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -18,8 +18,10 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import { updateRowInSheet } from "../../auth"; // Import the function
 
-const ExcelTable = ({ data }) => {
+const ExcelTable = ({ data, hoja, fetchData }) => {
+  console.log(" data, hoja:", data, hoja);
   const tableContainerStyle = {
     maxWidth: "100%",
     overflowX: "auto",
@@ -30,12 +32,7 @@ const ExcelTable = ({ data }) => {
   };
 
   const [selectedRow, setSelectedRow] = useState(null);
-  const [formData, setFormData] = useState({
-    // Define los campos del formulario según tu estructura de datos
-    nombre: "",
-    nroRef: "",
-    nroSer: "",
-  });
+  const [formData, setFormData] = useState({});
   const [openForm, setOpenForm] = useState(false);
 
   // Obtén las claves (nombres de las columnas) del primer objeto
@@ -44,29 +41,41 @@ const ExcelTable = ({ data }) => {
   // Función para manejar la edición de una fila
   const handleEditRow = (rowIndex) => {
     console.log(`Editando fila ${rowIndex + 1}`);
+
     setSelectedRow(rowIndex);
     setFormData(data[rowIndex + 1]); // Carga los datos de la fila seleccionada en el formulario
     setOpenForm(true);
+    console.log("formData:", formData);
   };
 
   const handleCloseForm = () => {
     setOpenForm(false);
   };
 
-  const handleSubmitForm = () => {
-    // Lógica para enviar los datos actualizados a Google Sheets
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmitForm = async () => {
     console.log("Datos actualizados:", formData);
 
     // Código para actualizar los datos en Google Sheets
-    // writeDataToSheet(alignment, formData);
+    await updateRowInSheet(hoja, selectedRow, formData); // Llama a la función para actualizar la fila en Google Sheets
 
     setOpenForm(false);
+    fetchData();
   };
-  // Función para manejar la eliminación de una fila
+
   const handleDeleteRow = (rowIndex) => {
     console.log(`Borrando fila ${rowIndex}`);
     // Agrega aquí la lógica para borrar la fila
   };
+
+  /*  useEffect(() => fetchData(), [formData]); */
 
   return (
     <div>
@@ -74,7 +83,6 @@ const ExcelTable = ({ data }) => {
         <Table style={tableStyle} aria-label="Excel Table">
           {/* Encabezados de la tabla */}
           <TableHead>
-            {/* Filas de la tabla */}
             <TableRow>
               {columnHeaders.map((header) => (
                 <TableCell key={header}>{header}</TableCell>
@@ -90,14 +98,12 @@ const ExcelTable = ({ data }) => {
                   <TableCell key={header}>{row[header]}</TableCell>
                 ))}
                 <TableCell>
-                  {/* Botón de edición */}
                   <IconButton
                     onClick={() => handleEditRow(index)}
                     aria-label="Editar"
                   >
                     <EditIcon />
                   </IconButton>
-                  {/* Icono de borrado */}
                   <IconButton
                     onClick={() => handleDeleteRow(index)}
                     aria-label="Borrar"
@@ -117,44 +123,19 @@ const ExcelTable = ({ data }) => {
           <DialogContentText>
             Por favor, modifique los siguientes campos:
           </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="NroRef"
-            type="text"
-            fullWidth
-            name="NroRef"
-            value={formData.nro_de_ref}
-            onChange={(e) =>
-              setFormData({ ...formData, nroRef: e.target.value })
-            }
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Nombre"
-            type="text"
-            fullWidth
-            name="nombre"
-            value={formData.nombre}
-            onChange={(e) =>
-              setFormData({ ...formData, nombre: e.target.value })
-            }
-          />
-
-          <TextField
-            autoFocus
-            margin="dense"
-            label="NroSer"
-            type="text"
-            fullWidth
-            name="NroSer"
-            value={formData.nro_de_serie}
-            onChange={(e) =>
-              setFormData({ ...formData, nroSer: e.target.value })
-            }
-          />
-          {/* Otros campos del formulario */}
+          {Object.keys(formData).map((key) => (
+            <TextField
+              key={key}
+              autoFocus
+              margin="dense"
+              label={key}
+              type="text"
+              fullWidth
+              name={key}
+              value={formData[key]}
+              onChange={handleInputChange}
+            />
+          ))}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseForm}>Cancelar</Button>
