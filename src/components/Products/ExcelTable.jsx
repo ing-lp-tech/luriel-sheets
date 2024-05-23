@@ -45,7 +45,6 @@ const ExcelTable = ({ data, hoja, fetchData }) => {
     setSelectedRow(rowIndex);
     setFormData(data[rowIndex + 1]); // Carga los datos de la fila seleccionada en el formulario
     setOpenForm(true);
-    console.log("formData:", formData);
   };
 
   const handleCloseForm = () => {

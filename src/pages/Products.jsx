@@ -10,6 +10,7 @@ import {
   DialogContentText,
   DialogActions,
   TextField,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import {
@@ -27,28 +28,8 @@ const Products = () => {
   const [showAddButton, setShowAddButton] = useState(false);
   const [formData, setFormData] = useState({});
   const [products, setProducts] = useState([]);
-
-  /*  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let data;
-        if (alignment === "productos") {
-          data = await getProducts();
-        } else if (alignment === "entradas") {
-          data = await getEntradas();
-        } else if (alignment === "salidas") {
-          data = await getSalidas();
-        } else if (alignment === "inventario") {
-          data = await getInventario();
-        }
-        setProducts(data || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [alignment]); */
+  const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleAlignmentChange = async (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -65,6 +46,7 @@ const Products = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setErrorMessage(""); // Clear the error message when closing the dialog
   };
 
   const handleInputChange = (e) => {
@@ -73,30 +55,42 @@ const Products = () => {
       ...prevData,
       [name]: value,
     }));
+    console.log("name, value:", name, value);
+
+    if (alignment === "productos" && name === "nro_de_ref") {
+      const isDuplicate = products.some(
+        (product) => product.nro_de_ref === value
+      );
+      setIsAddButtonDisabled(isDuplicate);
+      if (isDuplicate) {
+        setErrorMessage("El producto con este número de referencia ya existe.");
+      } else {
+        setErrorMessage("");
+      }
+    }
   };
 
-  /* const handleSubmit = async () => {
-    try {
-      await writeDataToSheet(alignment, formData);
-      console.log("Datos enviados correctamente a Google Sheets");
-
-      if (alignment === "productos") {
-        setProducts(await getProducts());
-      }
-
-      handleClose();
-    } catch (error) {
-      console.error("Error al enviar datos a Google Sheets:", error);
-    }
-  }; */
   const handleSubmit = async () => {
     try {
-      // Filtrar las propiedades de formData para excluir la primera
       const filteredData = Object.fromEntries(
         Object.entries(formData).filter(([key, value], index) => index !== 0)
       );
 
-      await writeDataToSheet(alignment, filteredData);
+      // Convert fields to appropriate types
+      const transformedData = { ...filteredData };
+      if ("id" in transformedData) {
+        transformedData.id = Number(transformedData.id);
+      }
+      if ("cantidad" in transformedData) {
+        transformedData.cantidad = Number(transformedData.cantidad);
+      }
+      for (const key in transformedData) {
+        if (key.toLowerCase().includes("fecha")) {
+          transformedData[key] = new Date(transformedData[key]);
+        }
+      }
+
+      await writeDataToSheet(alignment, transformedData);
       console.log("Datos enviados correctamente a Google Sheets");
 
       if (alignment === "productos") {
@@ -108,8 +102,6 @@ const Products = () => {
       console.error("Error al enviar datos a Google Sheets:", error);
     }
   };
-
-  console.log("alignment", alignment);
 
   const fetchData = async () => {
     try {
@@ -128,25 +120,8 @@ const Products = () => {
       console.error("Error fetching data:", error);
     }
   };
+
   useEffect(() => {
-    /* const fetchData = async () => {
-      try {
-        let data;
-        if (alignment === "productos") {
-          data = await getProducts();
-        } else if (alignment === "entradas") {
-          data = await getEntradas();
-        } else if (alignment === "salidas") {
-          data = await getSalidas();
-        } else if (alignment === "inventario") {
-          data = await getInventario();
-        }
-        setProducts(data || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
- */
     fetchData();
   }, [alignment]);
 
@@ -191,29 +166,57 @@ const Products = () => {
             Por favor, complete los siguientes campos:
           </DialogContentText>
           {products.length > 0 &&
-            Object.entries(products[0]).map(([key, label]) =>
-              key === "id" ? null : ( // Ignora el primer valor del objeto
-                <TextField
-                  key={key}
-                  autoFocus
-                  margin="dense"
-                  label={label}
-                  type="text"
-                  fullWidth
-                  name={key}
-                  /* value={formData[key] || ""} */
-                  /* value={""} */
-                  onChange={handleInputChange}
-                  mb={2}
-                />
-              )
-            )}
+            Object.entries(products[0]).map(([key, label]) => {
+              if (key === "id") return null;
+              if (key.toLowerCase().includes("fecha")) {
+                return (
+                  <TextField
+                    key={key}
+                    autoFocus
+                    margin="dense"
+                    label={label}
+                    type="date"
+                    fullWidth
+                    name={key}
+                    onChange={handleInputChange}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    mb={2}
+                  />
+                );
+              } else {
+                return (
+                  <TextField
+                    key={key}
+                    autoFocus
+                    margin="dense"
+                    label={label}
+                    type="text"
+                    fullWidth
+                    name={key}
+                    onChange={handleInputChange}
+                    mb={2}
+                  />
+                );
+              }
+            })}
+          {errorMessage && (
+            <Typography color="error" variant="body2" mt={2}>
+              {errorMessage}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} mr={2}>
             Cancelar
           </Button>
-          <Button onClick={handleSubmit} color="primary" variant="contained">
+          <Button
+            onClick={handleSubmit}
+            color="primary"
+            variant="contained"
+            disabled={isAddButtonDisabled}
+          >
             Agregar
           </Button>
         </DialogActions>
@@ -227,7 +230,6 @@ export default Products;
 const ResponsiveContainer = styled(Container)(({ alignment }) => ({
   width: "100%",
   padding: "20px",
-  // Nuevo código: altura dinámica basada en la alineación
   height: alignment === null ? "16rem" : "auto",
   display: "flex",
   flexDirection: "column",
@@ -236,7 +238,7 @@ const ResponsiveContainer = styled(Container)(({ alignment }) => ({
   "@media (min-width: 768px)": {
     maxWidth: "960px",
     margin: "0 auto",
-    height: alignment === null ? "100px" : "auto", // Nuevo código
+    height: alignment === null ? "100px" : "auto",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
