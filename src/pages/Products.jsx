@@ -11,6 +11,11 @@ import {
   DialogActions,
   TextField,
   Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Autocomplete,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import {
@@ -28,6 +33,7 @@ const Products = () => {
   const [showAddButton, setShowAddButton] = useState(false);
   const [formData, setFormData] = useState({});
   const [products, setProducts] = useState([]);
+  const [productsRef, setProductsRef] = useState([]); // Nuevo hook de estado
   const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -55,7 +61,6 @@ const Products = () => {
       ...prevData,
       [name]: value,
     }));
-    console.log("name, value:", name, value);
 
     if (alignment === "productos" && name === "nro_de_ref") {
       const isDuplicate = products.some(
@@ -68,6 +73,44 @@ const Products = () => {
         setErrorMessage("");
       }
     }
+
+    if (
+      alignment === "entradas" &&
+      (name === "precio_docena" || name === "cantidad")
+    ) {
+      const precio_docena =
+        name === "precio_docena" ? value : formData.precio_docena;
+      const cantidad = name === "cantidad" ? value : formData.cantidad;
+      const totalPrice = precio_docena * cantidad;
+      setFormData((prevData) => ({
+        ...prevData,
+        precio_total: totalPrice,
+      }));
+    }
+  };
+
+  const handleSelectChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    setFormData((prevData) => ({
+      ...prevData,
+    }));
+  };
+
+  const handleAutocompleteChange = (event, newValue) => {
+    const selectedProduct = productsRef.find(
+      (product) => product.nro_de_ref === newValue?.nro_de_ref
+    );
+
+    setFormData((prevData) => ({
+      ...prevData,
+      nro_de_ref: newValue ? newValue.nro_de_ref : "",
+      nombre: selectedProduct ? selectedProduct.nombre : "",
+    }));
   };
 
   const handleSubmit = async () => {
@@ -78,11 +121,15 @@ const Products = () => {
 
       // Convert fields to appropriate types
       const transformedData = { ...filteredData };
+
       if ("id" in transformedData) {
         transformedData.id = Number(transformedData.id);
       }
       if ("cantidad" in transformedData) {
         transformedData.cantidad = Number(transformedData.cantidad);
+      }
+      if ("precio_total" in transformedData) {
+        transformedData.precio_total = Number(transformedData.precio_total);
       }
       for (const key in transformedData) {
         if (key.toLowerCase().includes("fecha")) {
@@ -90,11 +137,15 @@ const Products = () => {
         }
       }
 
+      console.log("transformedData:", transformedData);
+
       await writeDataToSheet(alignment, transformedData);
       console.log("Datos enviados correctamente a Google Sheets");
 
       if (alignment === "productos") {
-        setProducts(await getProducts());
+        const updatedProducts = await getProducts();
+        setProducts(updatedProducts);
+        setProductsRef(updatedProducts); // Actualizar productsRef cuando alignment es "productos"
       }
 
       handleClose();
@@ -108,6 +159,7 @@ const Products = () => {
       let data;
       if (alignment === "productos") {
         data = await getProducts();
+        setProductsRef(data); // Actualizar productsRef cuando alignment es "productos"
       } else if (alignment === "entradas") {
         data = await getEntradas();
       } else if (alignment === "salidas") {
@@ -124,6 +176,8 @@ const Products = () => {
   useEffect(() => {
     fetchData();
   }, [alignment]);
+
+  console.log("productsRef:", productsRef);
 
   return (
     <ResponsiveContainer alignment={alignment}>
@@ -168,7 +222,86 @@ const Products = () => {
           {products.length > 0 &&
             Object.entries(products[0]).map(([key, label]) => {
               if (key === "id") return null;
-              if (key.toLowerCase().includes("fecha")) {
+              if (key === "porcentage") return null;
+
+              if (
+                (alignment === "entradas" || alignment === "salidas") &&
+                key === "nro_de_ref"
+              ) {
+                return (
+                  <Autocomplete
+                    key={key}
+                    options={productsRef.map((product) => ({
+                      nro_de_ref: product.nro_de_ref,
+                    }))}
+                    getOptionLabel={(option) => option.nro_de_ref}
+                    onChange={handleAutocompleteChange}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        margin="dense"
+                        label="Nro de REF"
+                        fullWidth
+                      />
+                    )}
+                    mb={2}
+                  />
+                );
+              } else if (
+                (alignment === "entradas" || alignment === "salidas") &&
+                key === "nombre"
+              ) {
+                return (
+                  <TextField
+                    key={key}
+                    margin="dense"
+                    label={label}
+                    type="text"
+                    fullWidth
+                    name={key}
+                    value={formData.nombre || ""}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    mb={2}
+                  />
+                );
+              } else if (alignment === "entradas" && key === "docenas") {
+                return (
+                  <FormControl key={key} fullWidth margin="dense" mb={2}>
+                    <InputLabel id="demo-simple-select-label">
+                      Docena/Unidad
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Docena/Unidad"
+                      name="docenas"
+                      value={formData.docenas || ""}
+                      onChange={handleSelectChange}
+                    >
+                      <MenuItem value={"unidad"}>Unidad</MenuItem>
+                      <MenuItem value={"docena"}>Docena</MenuItem>
+                    </Select>
+                  </FormControl>
+                );
+              } else if (alignment === "entradas" && key === "precio_total") {
+                return (
+                  <TextField
+                    key={key}
+                    margin="dense"
+                    label={label}
+                    type="number"
+                    fullWidth
+                    name={key}
+                    value={formData.precio_total || ""}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    mb={2}
+                  />
+                );
+              } else if (key.toLowerCase().includes("fecha")) {
                 return (
                   <TextField
                     key={key}
