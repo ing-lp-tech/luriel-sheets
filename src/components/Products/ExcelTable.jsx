@@ -35,6 +35,19 @@ const ExcelTable = ({ data, hoja, fetchData }) => {
   const [formData, setFormData] = useState({});
   const [openForm, setOpenForm] = useState(false);
 
+  // Función para formatear la fecha
+  /* const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    return new Intl.DateTimeFormat("es-ES", options).format(date);
+  }; */
+
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+    return new Intl.DateTimeFormat("es-ES", options).format(date);
+  };
+
   // Obtén las claves (nombres de las columnas) del primer objeto
   const columnHeaders = Object.keys(data[0]);
 
@@ -94,7 +107,11 @@ const ExcelTable = ({ data, hoja, fetchData }) => {
             {data.slice(1).map((row, index) => (
               <TableRow key={index}>
                 {columnHeaders.map((header) => (
-                  <TableCell key={header}>{row[header]}</TableCell>
+                  <TableCell key={header}>
+                    {header.toLowerCase().includes("fecha")
+                      ? formatDate(row[header])
+                      : row[header]}
+                  </TableCell>
                 ))}
                 <TableCell>
                   <IconButton

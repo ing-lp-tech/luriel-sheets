@@ -78,7 +78,7 @@ async function getDataFromSheet(hoja) {
     // eslint-disable-next-line no-undef
     response = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: "1ZCUQWYMLJ_Yad620mI_zUCXSHbT-1naBDFPp1WMwP9Q",
-      range: `${hoja}!A:L`,
+      range: `${hoja}!A:K`,
     });
   } catch (err) {
     console.error(err);
@@ -154,10 +154,13 @@ async function getDataFromSheet(hoja) {
 }
 
 export { writeDataToSheet }; */
+
 async function writeDataToSheet(sheetName, formData) {
   console.log("sheetName, formData:", sheetName, formData);
-  // Obtener el rango de celdas donde se escribirán los datos
-  const range = `${sheetName}!A:G`; // Rango de las tres primeras columnas, ajusta según tu hoja
+
+  // Definir el rango de celdas según el nombre de la hoja
+  const endColumn = sheetName === "entradas" ? "J" : "D"; // Usar 'J' si la hoja es 'entradas', de lo contrario 'D'
+  const range = `${sheetName}!A:${endColumn}`; // Ajusta el rango según la hoja
 
   // Obtener los valores actuales en la hoja
   const response = await gapi.client.sheets.spreadsheets.values.get({
@@ -174,10 +177,18 @@ async function writeDataToSheet(sheetName, formData) {
     nextId = maxId + 1;
   }
 
+  // Eliminar el parámetro "porcentage" de formData si existe
+  const { porcentage, ...filteredFormData } = formData;
+
   // Crear la nueva fila con el ID incrementado
-  const newRow = [values.length, ...Object.values(formData)];
+  const newRow = [values.length, ...Object.values(filteredFormData)];
   console.log("newRow", newRow);
-  const newRange = `${sheetName}!A${values.length + 1}:D${values.length + 1}`;
+
+  // Definir el nuevo rango para insertar la fila
+  const newRange = `${sheetName}!A${values.length + 1}:${endColumn}${
+    values.length + 1
+  }`;
+  console.log("newRange:", newRange);
 
   try {
     const appendResponse = await gapi.client.sheets.spreadsheets.values.append({

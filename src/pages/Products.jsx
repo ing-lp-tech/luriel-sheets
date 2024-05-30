@@ -81,7 +81,7 @@ const Products = () => {
       const precio_docena =
         name === "precio_docena" ? value : formData.precio_docena;
       const cantidad = name === "cantidad" ? value : formData.cantidad;
-      const totalPrice = precio_docena * cantidad;
+      const totalPrice = Number(precio_docena * cantidad);
       setFormData((prevData) => ({
         ...prevData,
         precio_total: totalPrice,
